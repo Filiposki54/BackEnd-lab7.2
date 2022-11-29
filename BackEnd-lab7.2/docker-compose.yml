@@ -1,3 +1,4 @@
+version: "3.8"
 services:
   todo-db:
     image: diamol/postgres:11.5
