@@ -1,0 +1,32 @@
+services:
+  todo-db:
+    image: diamol/postgres:11.5
+    ports:
+      - "5433:5432"
+    volumes:
+        - ./todo-db:/var/lib/postgresql/data
+    environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DB=todo
+    restart:
+      unless-stopped
+
+  todo-web:
+    image: diamol/ch06-todo-list
+    ports:
+      - "80:80"
+    environment:
+      - Database:Provider=Postgres
+    depends_on:
+      - todo-db
+    secrets:
+      - source: postgres-connection
+        target: /app/config/secrets.json
+    restart:
+      unless-stopped
+
+secrets:
+  postgres-connection:
+    file: ./config/secrets.json
+
